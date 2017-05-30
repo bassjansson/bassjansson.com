@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
+      <?php
+        // Require https
+        if ($_SERVER['HTTPS'] != "on")
+        {
+            $url = "https://". $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+            header("Location: $url");
+            exit;
+        }
+      ?>
     <meta charset="utf-8">
     <title>My test page</title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
@@ -8,7 +17,7 @@
   </head>
   <body>
     <h1>Welcome to the world!</h1>
-    <img src="images/basslive.jpg" alt="BassLive 2.0">
+    <img src="images/basslive.jpg" alt="BassLive 2.0" height="100" width="200">
 
     <p>My name is Bass Jansson. I am:</p>
 
