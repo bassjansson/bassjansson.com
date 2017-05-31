@@ -1,8 +1,8 @@
 # Prevents Apache from serving .htaccess files
-<FilesMatch "^\.htaccess">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
+#<FilesMatch "^\.htaccess">
+#    Order allow,deny
+#    Deny from all
+#</FilesMatch>
 
 # Redirects to HTTPS
 RewriteEngine on
