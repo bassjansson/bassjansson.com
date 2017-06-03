@@ -9,15 +9,31 @@ html, body
     overflow: hidden;
     width: 100%;
     height: 100%;
-
-    /*font-size: 10px;
-    font-family: 'Open Sans', sans-serif;*/
 }
 
 #mainCanvas
 {
     width: 100%;
     background-color: black;
+
+    font-size: 128px;
+    font-family: 'Menlo Bold';
+}
+
+@font-face
+{
+    font-family: 'Menlo Regular';
+    src: url('../fonts/menlo-regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face
+{
+    font-family: 'Menlo Bold';
+    src: url('../fonts/menlo-bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 
