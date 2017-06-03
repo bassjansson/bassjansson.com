@@ -40,5 +40,5 @@ function animate()
 function animateHome()
 {
     // Wait for our font to load
-    setTimeout(function(){ animate(); }, 100);
+    setTimeout(function(){ animate(); }, 200);
 }
