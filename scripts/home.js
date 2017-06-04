@@ -7,7 +7,7 @@ function animate()
     var id = setInterval(frame, 120);
     var myText = "Hello, my name is Bass.";
     var posX = 100;
-    var posY = 300;
+    var posY = 200;
 
     ctx.font = "128px Menlo Bold";
     ctx.textAlign = "left";
@@ -40,5 +40,5 @@ function animate()
 function animateHome()
 {
     // Wait for our font to load
-    setTimeout(function(){ animate(); }, 200);
+    setTimeout(function(){ animate(); }, 500);
 }
