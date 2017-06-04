@@ -1,4 +1,5 @@
 var canvas;
+var canvasRatio;
 var gl;
 var squareVerticesBuffer;
 var squareVerticesColorBuffer;
@@ -14,18 +15,21 @@ var perspectiveMatrix;
 // Called when the canvas is created to get the ball rolling.
 // Figuratively, that is. There's nothing moving in this demo.
 //
-function start() {
+function start()
+{
   canvas = document.getElementById("glCanvas");
+  canvasRatio = canvas.height / canvas.width;
 
   initWebGL(canvas);      // Initialize the GL context
 
   // Only continue if WebGL is available and working
 
-  if (gl) {
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
-    gl.clearDepth(1.0);                 // Clear everything
-    gl.enable(gl.DEPTH_TEST);           // Enable depth testing
-    gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
+  if (gl)
+  {
+    gl.clearColor(1.0, 0.25, 0.75, 1.0); // Clear to pink for debugging, fully opaque
+    gl.clearDepth(1.0);                  // Clear everything
+    gl.enable(gl.DEPTH_TEST);            // Enable depth testing
+    gl.depthFunc(gl.LEQUAL);             // Near things obscure far things
 
     // Initialize the shaders; this is where all the lighting for the
     // vertices and so forth is established.
@@ -71,8 +75,8 @@ function initWebGL() {
 // Initialize the buffers we'll need. For this demo, we just have
 // one object -- a simple two-dimensional square.
 //
-function initBuffers() {
-
+function initBuffers()
+{
   // Create a buffer for the square's vertices.
 
   squareVerticesBuffer = gl.createBuffer();
@@ -85,11 +89,13 @@ function initBuffers() {
   // Now create an array of vertices for the square. Note that the Z
   // coordinate is always 0 here.
 
+  var squareHeight = 1.0 - 2.0 * canvasRatio;
+
   var vertices = [
-     1.0,  1.0,  0.0,
-    -1.0,  1.0,  0.0,
-     1.0, -1.0,  0.0,
-    -1.0, -1.0,  0.0
+     1.0, 1.0, 0.0,
+    -1.0, 1.0, 0.0,
+     1.0, squareHeight, 0.0,
+    -1.0, squareHeight, 0.0
   ];
 
   // Now pass the list of vertices into WebGL to build the shape. We
@@ -117,7 +123,8 @@ function initBuffers() {
 //
 // Draw the scene.
 //
-function drawScene() {
+function drawScene()
+{
   // Clear the canvas before we start drawing on it.
 
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -127,7 +134,7 @@ function drawScene() {
   // ratio of 1.0, and we only want to see objects between 0.1 units
   // and 100 units away from the camera.
 
-  perspectiveMatrix = makePerspective(45, 1.0, 0.1, 100.0);
+  perspectiveMatrix = makePerspective(45, 1.0 / canvasRatio, 0.1, 100.0);
 
   // Set the drawing position to the "identity" point, which is
   // the center of the scene.
@@ -138,7 +145,7 @@ function drawScene() {
   // drawing the square to fill the entire screen.
 
   // 1/tan(pi/8) = 1+sqrt(2) = 2.4142135624
-  mvTranslate([0.0, 0.0, -2.4142135624]);
+  mvTranslate([0.0, canvasRatio - 1.0, canvasRatio * -2.4142135624]);
 
   // Draw the square by binding the array buffer to the square's vertices
   // array, setting attributes, and pushing it to GL.
@@ -162,7 +169,8 @@ function drawScene() {
 //
 // Initialize the shaders, so WebGL knows how to light our scene.
 //
-function initShaders() {
+function initShaders()
+{
   var fragmentShader = getShader(gl, "shader-fs");
   var vertexShader = getShader(gl, "shader-vs");
 
@@ -194,7 +202,8 @@ function initShaders() {
 // Loads a shader program by scouring the current document,
 // looking for a script with the specified ID.
 //
-function getShader(gl, id) {
+function getShader(gl, id)
+{
   var shaderScript = document.getElementById(id);
 
   // Didn't find an element with the specified ID; abort.
@@ -252,19 +261,23 @@ function getShader(gl, id) {
 // Matrix utility functions
 //
 
-function loadIdentity() {
+function loadIdentity()
+{
   mvMatrix = Matrix.I(4);
 }
 
-function multMatrix(m) {
+function multMatrix(m)
+{
   mvMatrix = mvMatrix.x(m);
 }
 
-function mvTranslate(v) {
+function mvTranslate(v)
+{
   multMatrix(Matrix.Translation($V([v[0], v[1], v[2]])).ensure4x4());
 }
 
-function setMatrixUniforms() {
+function setMatrixUniforms()
+{
   var pUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
   gl.uniformMatrix4fv(pUniform, false, new Float32Array(perspectiveMatrix.flatten()));
 

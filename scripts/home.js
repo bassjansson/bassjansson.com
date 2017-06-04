@@ -22,7 +22,7 @@ function animateHome()
     var posX = 100;
     var posY = 200;
 
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.fillStyle = "rgb(200, 200, 200)";
     ctx.fillText(">", posX, posY);
 

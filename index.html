@@ -19,17 +19,17 @@
         <script id="shader-vs" type="x-shader/x-vertex">
 
             attribute vec3 aVertexPosition;
-            attribute vec4 aVertexColor;
+            attribute vec4 aVertexColor; // Not used anymore
 
             uniform mat4 uMVMatrix;
             uniform mat4 uPMatrix;
 
-            varying lowp vec4 vColor;
+            varying mediump vec2 vPosition;
 
             void main(void)
             {
                 gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-                vColor = aVertexColor;
+                vPosition = vec2(aVertexPosition.x, aVertexPosition.y);
             }
 
         </script>
@@ -37,18 +37,37 @@
         <!-- Fragment shader program -->
         <script id="shader-fs" type="x-shader/x-fragment">
 
-            varying lowp vec4 vColor;
+            precision mediump float;
+
+            varying vec2 vPosition;
 
             void main(void)
             {
-                gl_FragColor = vColor;
+                float min = 0.05;
+                float step = 0.1;
+
+                vec4 col;
+
+                if (abs(mod(vPosition.x, step)) <= min ||
+                    abs(mod(vPosition.y, step)) <= min)
+                {
+                    col = vec4(1.0 - abs(vPosition.x), 1.0 - abs(vPosition.y), 0.5, 1.);
+                }
+                else
+                {
+                    col = vec4(0., 0.1, 0.2, 1.);
+                }
+
+                //col = vec4(vPosition.x, vPosition.y, 0.0, 1.0);
+
+                gl_FragColor = col;//vColor;
             }
 
         </script>
     </head>
 
     <body onload="start()">
-        <canvas id="glCanvas" width=256 height=512>
+        <canvas id="glCanvas" width=512 height=1024>
             Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
         </canvas>
 
