@@ -55,7 +55,10 @@
         <canvas id="mainCanvas" width=2048 height=4096></canvas>
 
         <script>
-            animateHome();
+            initHome();
+
+            // Wait for our font to load
+            setTimeout(function(){ animateHome(); }, 1000);
         </script>
 
         <!-- <img src="images/basslive.jpg" alt="BassLive 2.0" height="200" width="300"> -->
