@@ -6,6 +6,8 @@ var mvMatrix;
 var shaderProgram;
 var vertexPositionAttribute;
 var perspectiveMatrix;
+var menuPositionsUniform;
+var menuPositions;
 
 //
 // start
@@ -43,6 +45,10 @@ function start()
 
     setInterval(drawScene, 15);
   }
+
+  // Init menu positions
+  
+  menuPositions = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7];
 }
 
 //
@@ -138,6 +144,10 @@ function drawScene()
   gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
   gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
+  // Set the menu positions uniform
+
+  gl.uniform2fv(menuPositionsUniform, menuPositions);
+
   // Draw the square.
 
   setMatrixUniforms();
@@ -171,6 +181,10 @@ function initShaders()
 
   vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
   gl.enableVertexAttribArray(vertexPositionAttribute);
+
+  // Get location of the menu positions uniform
+
+  menuPositionsUniform = gl.getUniformLocation(shaderProgram, "uMenuPositions");
 }
 
 //

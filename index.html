@@ -40,26 +40,28 @@
 
             varying vec2 vPosition;
 
+            uniform vec2 uMenuPositions[4];
+
             void main(void)
             {
-                float min = 0.05;
-                float step = 0.1;
+                int posX = int(mod(abs(vPosition.x * 4.0), 3.99));
+                int posY = int(mod(abs(vPosition.y * 4.0), 3.99));
 
-                vec4 col;
+                vec2 posXV, posYV;
 
-                if (abs(mod(vPosition.x, step)) <= min ||
-                    abs(mod(vPosition.y, step)) <= min)
-                {
-                    col = vec4(1.0 - abs(vPosition.x), 1.0 - abs(vPosition.y), 0.5, 1.);
-                }
-                else
-                {
-                    col = vec4(0., 0.1, 0.2, 1.);
-                }
+                if (posX == 0) posXV = uMenuPositions[0];
+                if (posX == 1) posXV = uMenuPositions[1];
+                if (posX == 2) posXV = uMenuPositions[2];
+                if (posX == 3) posXV = uMenuPositions[3];
 
-                //col = vec4(vPosition.x, vPosition.y, 0.0, 1.0);
+                if (posY == 0) posYV = uMenuPositions[0];
+                if (posY == 1) posYV = uMenuPositions[1];
+                if (posY == 2) posYV = uMenuPositions[2];
+                if (posY == 3) posYV = uMenuPositions[3];
 
-                gl_FragColor = col;//vColor;
+                vec4 col = vec4(posXV.x, posYV.x, posXV.y * posYV.y, 1.0);
+
+                gl_FragColor = col;
             }
 
         </script>
