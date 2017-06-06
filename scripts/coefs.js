@@ -19,11 +19,26 @@ function getCoefficient(coordinates, size, coefficient, position)
 
 function getCoefficients(coordinates)
 {
-    var coefficients = [math.complex(1.0)];
     var size = coordinates.length;
+    var coefficients = [];
+
+    for (i = 0; i <= size; ++i)
+        coefficients.push(getCoefficient(coordinates, size, i, 0));
+
+    return coefficients;
+}
+
+function getCoefficientsForShader(coordinates)
+{
+    var coefs = getCoefficients(coordinates);
+    var size = coefs.length;
+    var coefficients = [];
 
     for (i = 0; i < size; ++i)
-        coefficients.push(getCoefficient(coordinates, size, i + 1, 0));
+    {
+        coefficients.push(math.re(coefs[i]));
+        coefficients.push(math.im(coefs[i]));
+    }
 
     return coefficients;
 }

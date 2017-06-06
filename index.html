@@ -38,40 +38,55 @@
         <!-- Fragment shader program -->
         <script id="shader-fs" type="x-shader/x-fragment">
 
+            #define SIZE 5
+
             precision mediump float;
 
             varying vec2 vPosition;
 
-            uniform vec2 uMenuPositions[4];
+            uniform vec2 uCoefficients[SIZE];
+
+            vec2 cMul(vec2 a, vec2 b)
+            {
+                vec2 c;
+                c.x = a.x * b.x - a.y * b.y;
+                c.y = a.x * b.y + a.y * b.x;
+                return c;
+            }
+
+            float cAbs(vec2 c)
+            {
+                return sqrt(c.x*c.x + c.y*c.y);
+            }
+
+            float cArg(vec2 c)
+            {
+                return atan(c.y, c.x) * 0.3183098862; // 1/pi
+            }
 
             void main(void)
             {
-                int posX = int(mod(abs(vPosition.x * 4.0), 3.99));
-                int posY = int(mod(abs(vPosition.y * 4.0), 3.99));
+                vec2 x = vec2(1, 0);
+                vec2 y = vec2(0, 0);
 
-                vec2 posXV, posYV;
+                for (int i = SIZE - 1; i >= 0; --i)
+                {
+                    y += cMul(x, uCoefficients[i]);
+                    x  = cMul(x, vPosition);
+                }
 
-                if (posX == 0) posXV = uMenuPositions[0];
-                if (posX == 1) posXV = uMenuPositions[1];
-                if (posX == 2) posXV = uMenuPositions[2];
-                if (posX == 3) posXV = uMenuPositions[3];
-
-                if (posY == 0) posYV = uMenuPositions[0];
-                if (posY == 1) posYV = uMenuPositions[1];
-                if (posY == 2) posYV = uMenuPositions[2];
-                if (posY == 3) posYV = uMenuPositions[3];
-
-                vec4 col = vec4(posXV.x, posYV.x, posXV.y * posYV.y, 1.0);
-
-                gl_FragColor = col;
+                gl_FragColor = vec4(
+                    cos(y.x) * -0.5 + 0.5,
+                    cos(y.y) * -0.5 + 0.5,
+                    abs(cArg(y)),
+                    1.0);
             }
 
         </script>
     </head>
 
-    <!-- <body onload="start()"> -->
-    <body>
-        <canvas id="glCanvas" width=256 height=512>
+    <body onload="start()">
+        <canvas id="glCanvas" width=512 height=1024>
             Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
         </canvas>
 
@@ -82,21 +97,6 @@
 
             // Wait for our font to load
             setTimeout(function(){ animateHome(); }, 1000);
-        </script>
-
-        <!-- Coordinates to coefficients test -->
-        <p id="demo"></p>
-
-        <script>
-            var coordinates = [math.complex(2, 4), math.complex(-1, 2)];
-            var coefficients = getCoefficients(coordinates);
-            var size = coefficients.length;
-            var text = "";
-
-            for (i = 0; i < size; i++)
-                text += coefficients[i] + ", ";
-
-            document.getElementById("demo").innerHTML = text;
         </script>
 
         <!-- <img src="images/basslive.jpg" alt="BassLive 2.0" height="200" width="300"> -->

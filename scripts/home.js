@@ -42,8 +42,6 @@ function animateHome()
                 ctx.fillText(myText.slice(pos, pos + 1), posX + 32 + 76 * (pos + 1), posY);
 
                 pos++;
-
-                menuPositions[4] = Math.abs(Math.sin(pos * 0.1));
             }
         }
     }

@@ -6,8 +6,8 @@ var mvMatrix;
 var shaderProgram;
 var vertexPositionAttribute;
 var perspectiveMatrix;
-var menuPositionsUniform;
-var menuPositions;
+var coefficientsUniform;
+var menuCoordinates;
 
 //
 // start
@@ -17,10 +17,21 @@ var menuPositions;
 //
 function start()
 {
+  // Init menu coordinates
+
+  menuCoordinates = [
+      math.complex( 0.5,   0.25),
+      math.complex( 0.25,  0.5),
+      math.complex(-0.25,  0.5),
+      math.complex(-0.5,   0.25)
+  ]
+
+  // Initialize the GL context
+
   canvas = document.getElementById("glCanvas");
   canvasRatio = canvas.height / canvas.width;
 
-  initWebGL(canvas);      // Initialize the GL context
+  initWebGL(canvas);
 
   // Only continue if WebGL is available and working
 
@@ -45,10 +56,6 @@ function start()
 
     setInterval(drawScene, 15);
   }
-
-  // Init menu positions
-  
-  menuPositions = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7];
 }
 
 //
@@ -57,18 +64,20 @@ function start()
 // Initialize WebGL, returning the GL context or null if
 // WebGL isn't available or could not be initialized.
 //
-function initWebGL() {
+function initWebGL()
+{
   gl = null;
 
-  try {
+  try
+  {
     gl = canvas.getContext("experimental-webgl");
   }
-  catch(e) {
-  }
+  catch(e) {}
 
   // If we don't have a GL context, give up now
 
-  if (!gl) {
+  if (!gl)
+  {
     alert("Unable to initialize WebGL. Your browser may not support it.");
   }
 }
@@ -144,9 +153,9 @@ function drawScene()
   gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
   gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-  // Set the menu positions uniform
+  // Set the coefficients uniform
 
-  gl.uniform2fv(menuPositionsUniform, menuPositions);
+  gl.uniform2fv(coefficientsUniform, getCoefficientsForShader(menuCoordinates));
 
   // Draw the square.
 
@@ -182,9 +191,9 @@ function initShaders()
   vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
   gl.enableVertexAttribArray(vertexPositionAttribute);
 
-  // Get location of the menu positions uniform
+  // Get location of the coefficients uniform
 
-  menuPositionsUniform = gl.getUniformLocation(shaderProgram, "uMenuPositions");
+  coefficientsUniform = gl.getUniformLocation(shaderProgram, "uCoefficients");
 }
 
 //
