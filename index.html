@@ -43,7 +43,7 @@
 
             #define ITERATIONS 10
 
-            precision mediump float;
+            precision highp float;
 
             varying vec2 vPosition;
 
@@ -62,7 +62,7 @@
             {
                 vec2 c;
                 float d = b.x * b.x + b.y * b.y;
-                if (d == 0.0) d = 0.000001;
+                if (abs(d) < 0.000001) d = 0.000001;
                 c.x = (a.x * b.x + a.y * b.y) / d;
                 c.y = (a.y * b.x - a.x * b.y) / d;
                 return c;
