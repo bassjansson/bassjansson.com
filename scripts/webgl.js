@@ -44,7 +44,7 @@ function start()
 
   var mainCanvas = document.getElementById("mainCanvas");
   mainCanvas.addEventListener("mousemove", onMouseMove, false);
-  mainCanvas.addEventListener("touchmove", onMouseMove, true);
+  mainCanvas.addEventListener("touchmove", onMouseMove, false);
 
   // Get the GL canvas element
 

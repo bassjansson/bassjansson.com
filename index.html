@@ -41,7 +41,7 @@
             #define POL_SIZE (5)
             #define DER_SIZE (POL_SIZE - 1)
 
-            #define ITERATIONS 20
+            #define ITERATIONS 10
 
             precision mediump float;
 
@@ -116,7 +116,7 @@
             void main(void)
             {
                 vec2 z = vPosition;
-                vec2 a = vec2(-0.1172, -1.7738);
+                vec2 a = vec2(-0.6172, -2.2738);
 
                 float value = 1.0;
 
@@ -131,7 +131,7 @@
                     }
                 }
 
-                float zVal = value * (value * 0.5 + 0.5);
+                float zVal = value * (value * 0.5 + 0.5) * 0.75;
                 float zHue = 0.6 - cArg(z) * 0.3 - cAbs(z) * 0.01;
 
                 gl_FragColor = vec4(hsv2rgb(vec3(zHue, 1.0, zVal)), 1.0);
