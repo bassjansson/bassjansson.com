@@ -12,15 +12,33 @@ var derivativeUniform;
 
 var menuCoordinates;
 
-// On mouse move event
+// Mouse and touch event handling
 
-function onMouseMove(event)
+function onMouseMove(e)
+{
+    if (!e) var e = event;
+
+    setMenuCoordinate(e.pageX, e.pageY);
+}
+
+function onTouchMove(e)
+{
+    if (!e) var e = event;
+
+    e.preventDefault();
+
+    setMenuCoordinate(
+        e.targetTouches[0].pageX,
+        e.targetTouches[0].pageY);
+}
+
+function setMenuCoordinate(x, y)
 {
     var clienWidth = document.documentElement.clientWidth;
 
     menuCoordinates[0] = math.complex(
-        event.clientX *  2.0 / clienWidth - 1.0,
-        event.clientY * -2.0 / clienWidth + 1.0);
+        x *  2.0 / clienWidth - 1.0,
+        y * -2.0 / clienWidth + 1.0);
 }
 
 //
@@ -44,7 +62,7 @@ function start()
 
   var mainCanvas = document.getElementById("mainCanvas");
   mainCanvas.addEventListener("mousemove", onMouseMove, false);
-  mainCanvas.addEventListener("touchmove", onMouseMove, false);
+  mainCanvas.addEventListener("touchmove", onTouchMove, false);
 
   // Get the GL canvas element
 
