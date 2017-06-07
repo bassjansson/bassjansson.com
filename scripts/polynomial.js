@@ -28,7 +28,7 @@ function getCoefficients(coordinates)
     return coefficients;
 }
 
-function getCoefficientsForShader(coordinates)
+function getPolynomial(coordinates)
 {
     var coefs = getCoefficients(coordinates);
     var size = coefs.length;
@@ -41,4 +41,15 @@ function getCoefficientsForShader(coordinates)
     }
 
     return coefficients;
+}
+
+function getDerivative(polynomial)
+{
+    var size = polynomial.length - 1;
+    var derivative = [];
+
+    for (i = 0; i < size; ++i)
+        derivative.push(math.multiply(polynomial[i], size - i))
+
+    return derivative;
 }

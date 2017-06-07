@@ -5,17 +5,17 @@
         <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
 
         <!-- Include utils -->
-        <script src="scripts/utils/sylvester.js" type="text/javascript"></script>
-        <script src="scripts/utils/gl-utils.js"  type="text/javascript"></script>
-        <script src="scripts/utils/math.js"      type="text/javascript"></script>
+        <script src="scripts/utils/sylvester.js"    type="text/javascript"></script>
+        <script src="scripts/utils/gl-utils.js"     type="text/javascript"></script>
+        <script src="scripts/utils/math.js"         type="text/javascript"></script>
 
         <!-- Include stylesheets -->
-        <link href="styles/style.css?v=0.0.5" type="text/css" rel="stylesheet">
+        <link href="styles/style.css?v=0.0.5"       type="text/css" rel="stylesheet">
 
         <!-- Include scripts -->
-        <script src="scripts/home.js?v=0.0.5"  type="text/javascript"></script>
-        <script src="scripts/webgl.js?v=0.0.5" type="text/javascript"></script>
-        <script src="scripts/coefs.js?v=0.0.5" type="text/javascript"></script>
+        <script src="scripts/home.js?v=0.0.5"       type="text/javascript"></script>
+        <script src="scripts/webgl.js?v=0.0.5"      type="text/javascript"></script>
+        <script src="scripts/polynomial.js?v=0.0.5" type="text/javascript"></script>
 
         <!-- Vertex shader program -->
         <script id="shader-vs" type="x-shader/x-vertex">
@@ -38,13 +38,17 @@
         <!-- Fragment shader program -->
         <script id="shader-fs" type="x-shader/x-fragment">
 
-            #define SIZE 5
+            #define POL_SIZE (5)
+            #define DER_SIZE (POL_SIZE - 1)
+
+            #define ITERATIONS 50
 
             precision mediump float;
 
             varying vec2 vPosition;
 
-            uniform vec2 uCoefficients[SIZE];
+            uniform vec2 uPolynomial[POL_SIZE];
+            uniform vec2 uDerivative[DER_SIZE];
 
             vec2 cMul(vec2 a, vec2 b)
             {
@@ -78,16 +82,15 @@
                 vec2 a = vec2(1, 0);
                 vec2 c = vec2(0.353301, 0.443129);
 
-                const int iterations = 50;
                 float value = 1.0;
 
-                for (int i = 0; i < iterations; ++i)
+                for (int i = 0; i < ITERATIONS; ++i)
                 {
                     z = cMul(a, cMul(z, z)) + c;
 
                     if (cAbs(z) > 2.0)
                     {
-                        value = float(i) / float(iterations);
+                        value = float(i) / float(ITERATIONS);
                         break;
                     }
                 }
@@ -97,7 +100,7 @@
                 // vec2 x = vec2(1, 0);
                 // vec2 y = vec2(0, 0);
                 //
-                // for (int i = SIZE - 1; i >= 0; --i)
+                // for (int i = POL_SIZE - 1; i >= 0; --i)
                 // {
                 //     y += cMul(x, uCoefficients[i]);
                 //     x  = cMul(x, vPosition);

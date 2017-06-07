@@ -6,7 +6,10 @@ var mvMatrix;
 var shaderProgram;
 var vertexPositionAttribute;
 var perspectiveMatrix;
-var coefficientsUniform;
+
+var polynomialUniform;
+var derivativeUniform;
+
 var menuCoordinates;
 
 //
@@ -153,9 +156,13 @@ function drawScene()
   gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
   gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-  // Set the coefficients uniform
+  // Set the shader uniforms
 
-  gl.uniform2fv(coefficientsUniform, getCoefficientsForShader(menuCoordinates));
+  var menuPolynomial = getPolynomial(menuCoordinates);
+  var menuDerivative = getDerivative(menuPolynomial);
+
+  gl.uniform2fv(polynomialUniform, menuPolynomial);
+  gl.uniform2fv(derivativeUniform, menuDerivative);
 
   // Draw the square.
 
@@ -191,9 +198,10 @@ function initShaders()
   vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
   gl.enableVertexAttribArray(vertexPositionAttribute);
 
-  // Get location of the coefficients uniform
+  // Get the locations of the uniforms
 
-  coefficientsUniform = gl.getUniformLocation(shaderProgram, "uCoefficients");
+  polynomialUniform = gl.getUniformLocation(shaderProgram, "uPolynomial");
+  derivativeUniform = gl.getUniformLocation(shaderProgram, "uDerivative");
 }
 
 //
