@@ -41,7 +41,7 @@
             #define POL_SIZE (5)
             #define DER_SIZE (POL_SIZE - 1)
 
-            #define ITERATIONS 50
+            #define ITERATIONS 20
 
             precision mediump float;
 
@@ -55,6 +55,15 @@
                 vec2 c;
                 c.x = a.x * b.x - a.y * b.y;
                 c.y = a.x * b.y + a.y * b.x;
+                return c;
+            }
+
+            vec2 cDiv(vec2 a, vec2 b)
+            {
+                vec2 c;
+                float d = b.x * b.x + b.y * b.y;
+                c.x = (a.x * b.x + a.y * b.y) / d;
+                c.y = (a.y * b.x - a.x * b.y) / d;
                 return c;
             }
 
@@ -76,17 +85,44 @@
                 return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
             }
 
+            vec2 polynomial(vec2 z)
+            {
+                vec2 x = vec2(1, 0);
+                vec2 y = vec2(0, 0);
+
+                for (int i = POL_SIZE - 1; i >= 0; --i)
+                {
+                    y += cMul(x, uPolynomial[i]);
+                    x  = cMul(x, z);
+                }
+
+                return y;
+            }
+
+            vec2 derivative(vec2 z)
+            {
+                vec2 x = vec2(1, 0);
+                vec2 y = vec2(0, 0);
+
+                for (int i = DER_SIZE - 1; i >= 0; --i)
+                {
+                    y += cMul(x, uDerivative[i]);
+                    x  = cMul(x, z);
+                }
+
+                return y;
+            }
+
             void main(void)
             {
                 vec2 z = vPosition;
-                vec2 a = vec2(1, 0);
-                vec2 c = vec2(0.353301, 0.443129);
+                vec2 a = vec2(-0.1172, -1.7738);
 
                 float value = 1.0;
 
                 for (int i = 0; i < ITERATIONS; ++i)
                 {
-                    z = cMul(a, cMul(z, z)) + c;
+                    z = z - cMul(a, cDiv(polynomial(z), derivative(z)));
 
                     if (cAbs(z) > 2.0)
                     {
@@ -95,19 +131,8 @@
                     }
                 }
 
-                // Calculate polynomial
-                //
-                // vec2 x = vec2(1, 0);
-                // vec2 y = vec2(0, 0);
-                //
-                // for (int i = POL_SIZE - 1; i >= 0; --i)
-                // {
-                //     y += cMul(x, uCoefficients[i]);
-                //     x  = cMul(x, vPosition);
-                // }
-
                 float zVal = value * (value * 0.5 + 0.5);
-                float zHue = 0.62 - zVal * 0.4;
+                float zHue = 0.6 - cArg(z) * 0.3 - cAbs(z) * 0.01;
 
                 gl_FragColor = vec4(hsv2rgb(vec3(zHue, 1.0, zVal)), 1.0);
             }
@@ -123,12 +148,12 @@
         <canvas id="mainCanvas" width=2048 height=4096></canvas>
 
         <script>
-            /*
+
             initHome();
 
             // Wait for our font to load
             setTimeout(function(){ animateHome(); }, 1000);
-            */
+
         </script>
 
         <!-- <img src="images/basslive.jpg" alt="BassLive 2.0" height="200" width="300"> -->

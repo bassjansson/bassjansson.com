@@ -12,6 +12,17 @@ var derivativeUniform;
 
 var menuCoordinates;
 
+// On mouse move event
+
+function onMouseMove(event)
+{
+    var clienWidth = document.documentElement.clientWidth;
+
+    menuCoordinates[0] = math.complex(
+        event.clientX *  2.0 / clienWidth - 1.0,
+        event.clientY * -2.0 / clienWidth + 1.0);
+}
+
 //
 // start
 //
@@ -23,16 +34,22 @@ function start()
   // Init menu coordinates
 
   menuCoordinates = [
-      math.complex( 0.5,   0.25),
-      math.complex( 0.25,  0.5),
-      math.complex(-0.25,  0.5),
-      math.complex(-0.5,   0.25)
+      math.complex(Math.random() - 0.5, Math.random() - 0.5),
+      math.complex(Math.random() - 0.5, Math.random() - 0.5),
+      math.complex(Math.random() - 0.5, Math.random() - 0.5),
+      math.complex(Math.random() - 0.5, Math.random() - 0.5)
   ]
 
-  // Initialize the GL context
+  // Add mouse event listener
+
+  document.getElementById("mainCanvas").onmousemove = onMouseMove;
+
+  // Get the GL canvas element
 
   canvas = document.getElementById("glCanvas");
   canvasRatio = canvas.height / canvas.width;
+
+  // Initialize the GL context
 
   initWebGL(canvas);
 
@@ -57,7 +74,7 @@ function start()
 
     // Set up to draw the scene periodically.
 
-    setInterval(drawScene, 15);
+    setInterval(drawScene, 33);
   }
 }
 
@@ -156,13 +173,24 @@ function drawScene()
   gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
   gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-  // Set the shader uniforms
+  // Update the menu coordinates
+
+  // menuCoordinates = [
+  //     math.complex(-0.25,  0.2),
+  //     math.complex(-0.25,  0.1),
+  //     math.complex(-0.25, -0.0),
+  //     math.complex(-0.25, -0.1)
+  // ]
+
+  // Get the menu polynomial and derivative
 
   var menuPolynomial = getPolynomial(menuCoordinates);
   var menuDerivative = getDerivative(menuPolynomial);
 
-  gl.uniform2fv(polynomialUniform, menuPolynomial);
-  gl.uniform2fv(derivativeUniform, menuDerivative);
+  // Set the shader uniforms
+
+  gl.uniform2fv(polynomialUniform, complexToUniformArray(menuPolynomial));
+  gl.uniform2fv(derivativeUniform, complexToUniformArray(menuDerivative));
 
   // Draw the square.
 

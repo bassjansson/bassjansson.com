@@ -17,7 +17,7 @@ function getCoefficient(coordinates, size, coefficient, position)
 
 // coordinates  : array of complex coordinates
 
-function getCoefficients(coordinates)
+function getPolynomial(coordinates)
 {
     var size = coordinates.length;
     var coefficients = [];
@@ -28,20 +28,7 @@ function getCoefficients(coordinates)
     return coefficients;
 }
 
-function getPolynomial(coordinates)
-{
-    var coefs = getCoefficients(coordinates);
-    var size = coefs.length;
-    var coefficients = [];
-
-    for (i = 0; i < size; ++i)
-    {
-        coefficients.push(math.re(coefs[i]));
-        coefficients.push(math.im(coefs[i]));
-    }
-
-    return coefficients;
-}
+// polynomial   : array of complex coefficients
 
 function getDerivative(polynomial)
 {
@@ -52,4 +39,20 @@ function getDerivative(polynomial)
         derivative.push(math.multiply(polynomial[i], size - i))
 
     return derivative;
+}
+
+// complexArray : array of complex numbers
+
+function complexToUniformArray(complexArray)
+{
+    var size = complexArray.length;
+    var uniformArray = [];
+
+    for (i = 0; i < size; ++i)
+    {
+        uniformArray.push(math.re(complexArray[i]));
+        uniformArray.push(math.im(complexArray[i]));
+    }
+
+    return uniformArray;
 }
