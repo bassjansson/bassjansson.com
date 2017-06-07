@@ -40,9 +40,11 @@ function start()
       math.complex(Math.random() - 0.5, Math.random() - 0.5)
   ]
 
-  // Add mouse event listener
+  // Add mouse event listeners
 
-  document.getElementById("mainCanvas").onmousemove = onMouseMove;
+  var mainCanvas = document.getElementById("mainCanvas");
+  mainCanvas.addEventListener("mousemove", onMouseMove, false);
+  mainCanvas.addEventListener("touchmove", onMouseMove, true);
 
   // Get the GL canvas element
 
