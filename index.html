@@ -42,6 +42,7 @@
             #define DER_SIZE (POL_SIZE - 1)
 
             #define ITERATIONS 10
+            #define MINIMUM 0.000000001
 
             precision highp float;
 
@@ -62,7 +63,7 @@
             {
                 vec2 c;
                 float d = b.x * b.x + b.y * b.y;
-                if (abs(d) < 0.000001) d = 0.000001;
+                if (abs(d) < MINIMUM) d = MINIMUM;
                 c.x = (a.x * b.x + a.y * b.y) / d;
                 c.y = (a.y * b.x - a.x * b.y) / d;
                 return c;
