@@ -61,25 +61,52 @@
 
             float cArg(vec2 c)
             {
-                return atan(c.y, c.x) * 0.3183098862; // 1/pi
+                return abs(atan(c.y, c.x) * 0.3183098862); // 1/pi
+            }
+
+            vec3 hsv2rgb(vec3 c)
+            {
+                vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+                vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+
+                return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
             }
 
             void main(void)
             {
-                vec2 x = vec2(1, 0);
-                vec2 y = vec2(0, 0);
+                vec2 z = vPosition;
+                vec2 a = vec2(1, 0);
+                vec2 c = vec2(0.353301, 0.443129);
 
-                for (int i = SIZE - 1; i >= 0; --i)
+                const int iterations = 50;
+                float value = 1.0;
+
+                for (int i = 0; i < iterations; ++i)
                 {
-                    y += cMul(x, uCoefficients[i]);
-                    x  = cMul(x, vPosition);
+                    z = cMul(a, cMul(z, z)) + c;
+
+                    if (cAbs(z) > 2.0)
+                    {
+                        value = float(i) / float(iterations);
+                        break;
+                    }
                 }
 
-                gl_FragColor = vec4(
-                    cos(y.x) * -0.5 + 0.5,
-                    cos(y.y) * -0.5 + 0.5,
-                    abs(cArg(y)),
-                    1.0);
+                // Calculate polynomial
+                //
+                // vec2 x = vec2(1, 0);
+                // vec2 y = vec2(0, 0);
+                //
+                // for (int i = SIZE - 1; i >= 0; --i)
+                // {
+                //     y += cMul(x, uCoefficients[i]);
+                //     x  = cMul(x, vPosition);
+                // }
+
+                float zVal = value * (value * 0.5 + 0.5);
+                float zHue = 0.62 - zVal * 0.4;
+
+                gl_FragColor = vec4(hsv2rgb(vec3(zHue, 1.0, zVal)), 1.0);
             }
 
         </script>
@@ -93,10 +120,12 @@
         <canvas id="mainCanvas" width=2048 height=4096></canvas>
 
         <script>
+            /*
             initHome();
 
             // Wait for our font to load
             setTimeout(function(){ animateHome(); }, 1000);
+            */
         </script>
 
         <!-- <img src="images/basslive.jpg" alt="BassLive 2.0" height="200" width="300"> -->
