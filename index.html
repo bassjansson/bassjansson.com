@@ -141,7 +141,7 @@
                 float zVal = clip(value * (value * 0.5 + 0.5) * 0.75);
                 float zHue = clip(0.6 - cArg(z) * 0.3 - cAbs(z) * 0.01);
 
-                gl_FragColor = vec4(hsv2rgb(vec3(zHue, 1.0, zVal)), 1.0);
+                gl_FragColor = vec4(hsv2rgb(vec3(1.0 - zHue, 1.0, zVal)), 1.0);
             }
 
         </script>
