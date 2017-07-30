@@ -41,7 +41,7 @@
             #define POL_SIZE (5)
             #define DER_SIZE (POL_SIZE - 1)
 
-            #define ITERATIONS 10
+            #define ITERATIONS 50
             #define MINIMUM 0.000000001
 
             precision highp float;
@@ -123,13 +123,15 @@
             void main(void)
             {
                 vec2 z = vPosition;
-                vec2 a = vec2(-0.6172, -2.2738);
+                vec2 a = uPolynomial[1];
+                //vec2 a = vec2(-0.6172, -2.2738);
 
                 float value = 1.0;
 
                 for (int i = 0; i < ITERATIONS; ++i)
                 {
-                    z = z - cMul(a, cDiv(polynomial(z), derivative(z)));
+                    //z = z - cMul(a, cDiv(polynomial(z), derivative(z)));
+                    z = cMul(z, z) + a;
 
                     if (cAbs(z) > 2.0)
                     {
@@ -138,10 +140,11 @@
                     }
                 }
 
-                float zVal = clip(value * (value * 0.5 + 0.5) * 0.75);
-                float zHue = clip(0.6 - cArg(z) * 0.3 - cAbs(z) * 0.01);
-
-                gl_FragColor = vec4(hsv2rgb(vec3(1.0 - zHue, 1.0, zVal)), 1.0);
+                // float zVal = clip(value * (value * 0.5 + 0.5) * 0.75);
+                // float zHue = clip(0.6 - cArg(z) * 0.3 - cAbs(z) * 0.01);
+                //
+                // gl_FragColor = vec4(hsv2rgb(vec3(1.0 - zHue, 1.0, zVal)), 1.0);
+                gl_FragColor = vec4(value * cArg(z), value, value * cAbs(z), 1.0);
             }
 
         </script>
